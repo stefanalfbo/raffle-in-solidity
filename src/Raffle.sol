@@ -1,6 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.19;
 
+// Custom errors
+error Raffle__SendMoreToEnterRaffle();
+
 /**
  * @title A sample Raffle contract
  * @author Stefan Alfbo
@@ -15,7 +18,9 @@ contract Raffle {
     }
 
     function enterRaffle() public payable {
-        // Enter the raffle
+        if (msg.value < i_entranceFee) {
+            revert Raffle__SendMoreToEnterRaffle();
+        }
     }
 
     function pickWinner() public {
