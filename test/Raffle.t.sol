@@ -11,7 +11,7 @@ contract RaffleTest is Test, RaffleEvent {
     uint256 constant INTERVAL = 60;
 
     function setUp() public {
-        raffle = new Raffle(ENTRANCE_FEE, INTERVAL);
+        raffle = new Raffle(ENTRANCE_FEE, INTERVAL, address(1), bytes32(0), 0, 0);
     }
 
     function testEnterRaffleWithToLittleEth() public {
