@@ -3,10 +3,10 @@ pragma solidity 0.8.19;
 
 import {Test} from "forge-std/Test.sol";
 import {DeployRaffle} from "../../script/DeployRaffle.s.sol";
-import {Raffle, Raffle__SendMoreToEnterRaffle} from "../../src/Raffle.sol";
+import {Raffle, Raffle__SendMoreToEnterRaffle, RaffleEvent} from "../../src/Raffle.sol";
 import {HelperConfig} from "../../script/HelperConfig.s.sol";
 
-contract RaffleTest is Test {
+contract RaffleTest is Test, RaffleEvent {
     Raffle raffle;
     HelperConfig helperConfig;
 
@@ -57,5 +57,17 @@ contract RaffleTest is Test {
         // Assert
         address playerRecorded = raffle.getPlayer(0);
         assert(playerRecorded == PLAYER);
+    }
+
+    function testEnteringRaffleEmitsEvent() public {
+        // Arrange
+        vm.prank(PLAYER);
+
+        // Act
+        vm.expectEmit(true, false, false, false, address(raffle));
+        emit RaffleEntered(PLAYER);
+
+        // Assert
+        raffle.enterRaffle{value: entranceFee}();
     }
 }
