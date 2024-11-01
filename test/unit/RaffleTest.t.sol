@@ -3,7 +3,7 @@ pragma solidity 0.8.19;
 
 import {Test} from "forge-std/Test.sol";
 import {DeployRaffle} from "../../script/DeployRaffle.s.sol";
-import {Raffle} from "../../src/Raffle.sol";
+import {Raffle, Raffle__SendMoreToEnterRaffle} from "../../src/Raffle.sol";
 import {HelperConfig} from "../../script/HelperConfig.s.sol";
 
 contract RaffleTest is Test {
@@ -30,9 +30,32 @@ contract RaffleTest is Test {
         gasLane = config.gasLane;
         subsriptionId = config.subscriptionId;
         callbackGasLimit = config.callbackGasLimit;
+
+        vm.deal(PLAYER, STARTUNG_PLAYER_BALANCE);
     }
 
     function testRaffleInitializesInOpenState() public view {
         assert(raffle.getState() == Raffle.RaffleState.OPEN);
+    }
+
+    function testRaffleRevertsWhenYouDontPayEnough() public {
+        // Arrange
+        vm.prank(PLAYER);
+
+        // Act / Assert
+        vm.expectRevert(Raffle__SendMoreToEnterRaffle.selector);
+        raffle.enterRaffle();
+    }
+
+    function testRaffleRecordsPlayersWhenTheyEnter() public {
+        // Arrange
+        vm.prank(PLAYER);
+
+        // Act
+        raffle.enterRaffle{value: entranceFee}();
+
+        // Assert
+        address playerRecorded = raffle.getPlayer(0);
+        assert(playerRecorded == PLAYER);
     }
 }
