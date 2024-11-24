@@ -15,3 +15,9 @@ clean: ## Remove the build artifacts and cache directories.
 	
 tests: ## Run the project’s tests.
 	forge test
+
+coverage: ## Displays which parts of your code are covered by tests. 
+	forge coverage
+
+coverage-report: ## Create a coverge report of the code that is uncovered by tests.
+	forge coverage --report debug > coverage.report
