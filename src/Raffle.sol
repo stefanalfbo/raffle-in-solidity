@@ -10,6 +10,7 @@ error Raffle__UpkeepNotNeeded(uint256 balance, uint256 playersLength, uint256 st
 interface RaffleEvent {
     event RaffleEntered(address indexed player);
     event WinnerPicked(address indexed winner);
+    event RequestedRaffleWinner(uint256 indexed requestId);
 }
 
 import {VRFConsumerBaseV2Plus} from "@chainlink/vrf/dev/VRFConsumerBaseV2Plus.sol";
@@ -107,16 +108,18 @@ contract Raffle is RaffleEvent, VRFConsumerBaseV2Plus {
 
         s_raffleState = RaffleState.CALCULATING;
 
-        uint256 requestId = s_vrfCoordinator.requestRandomWords(
-            VRFV2PlusClient.RandomWordsRequest({
-                keyHash: i_keyHash,
-                subId: i_subscriptionId,
-                requestConfirmations: REQUEST_CONFIRMATIONS,
-                callbackGasLimit: i_callbackGasLimit,
-                numWords: NUM_WORDS,
-                extraArgs: VRFV2PlusClient._argsToBytes(VRFV2PlusClient.ExtraArgsV1({nativePayment: false})) // new parameter
-            })
-        );
+        VRFV2PlusClient.RandomWordsRequest memory request = VRFV2PlusClient.RandomWordsRequest({
+            keyHash: i_keyHash,
+            subId: i_subscriptionId,
+            requestConfirmations: REQUEST_CONFIRMATIONS,
+            callbackGasLimit: i_callbackGasLimit,
+            numWords: NUM_WORDS,
+            extraArgs: VRFV2PlusClient._argsToBytes(VRFV2PlusClient.ExtraArgsV1({nativePayment: false})) // new parameter
+        });
+        uint256 requestId = s_vrfCoordinator.requestRandomWords(request);
+
+        // The emit is redundant since the VRF Coordinator emits the same data in an event
+        emit RequestedRaffleWinner(requestId);
     }
 
     // CEI: Checks, Effects, Interactions Pattern
