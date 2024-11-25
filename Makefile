@@ -21,3 +21,6 @@ coverage: ## Displays which parts of your code are covered by tests.
 
 coverage-report: ## Create a coverge report of the code that is uncovered by tests.
 	forge coverage --report debug > coverage.report
+
+format: ## Format Solidity source files.
+	forge fmt
