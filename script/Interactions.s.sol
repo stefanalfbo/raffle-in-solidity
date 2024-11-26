@@ -3,11 +3,11 @@ pragma solidity 0.8.19;
 
 import {Script, console} from "forge-std/Script.sol";
 import {HelperConfig, CodeConstants} from "./HelperConfig.s.sol";
-import {VRFCoordinatorV2Mock} from "@chainlink/vrf/mocks/VRFCoordinatorV2Mock.sol";
+import {VRFCoordinatorV2_5Mock} from "@chainlink/vrf/mocks/VRFCoordinatorV2_5Mock.sol";
 import {LinkToken} from "../test/mocks/LinkToken.sol";
 import {DevOpsTools} from "lib/foundry-devops/src/DevOpsTools.sol";
 
-contract CreateSubsription is Script {
+contract CreateSubscription is Script {
     function createSubscriptionUsingConfig() public returns (uint256, address) {
         // cast sig "createSubscription()" => 0xa21a23e4
         HelperConfig helperConfig = new HelperConfig();
@@ -19,7 +19,7 @@ contract CreateSubsription is Script {
     function createSubscription(address vrfCoordinator) public returns (uint256, address) {
         console.log("Creating subscription on chain Id: ", block.chainid);
         vm.startBroadcast();
-        uint256 subId = VRFCoordinatorV2Mock(vrfCoordinator).createSubscription();
+        uint256 subId = VRFCoordinatorV2_5Mock(vrfCoordinator).createSubscription();
         vm.stopBroadcast();
 
         console.log("Your subscription Id is: ", subId);
@@ -51,7 +51,7 @@ contract FundSubscription is Script, CodeConstants {
 
         if (block.chainid == LOCAL_CHAIN_ID) {
             vm.startBroadcast();
-            VRFCoordinatorV2Mock(vrfCoordinator).fundSubscription(uint64(subscriptionId), FUND_AMOUNT);
+            VRFCoordinatorV2_5Mock(vrfCoordinator).fundSubscription(subscriptionId, FUND_AMOUNT);
             vm.stopBroadcast();
         } else {
             vm.startBroadcast();
@@ -80,7 +80,7 @@ contract AddConsumer is Script {
         console.log("On chain Id: ", block.chainid);
 
         vm.startBroadcast();
-        VRFCoordinatorV2Mock(vrfCoordinator).addConsumer(uint64(subscriptionId), contractToAddtoVrf);
+        VRFCoordinatorV2_5Mock(vrfCoordinator).addConsumer(subscriptionId, contractToAddtoVrf);
         vm.stopBroadcast();
     }
 

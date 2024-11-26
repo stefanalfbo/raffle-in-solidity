@@ -80,7 +80,6 @@ contract RaffleTest is Test, RaffleEvent {
     }
 
     function testDontAllowPlayersToEnterWhileRaffleIsCalculating() public {
-        vm.skip(true); // something is incorrect here
         // Arrange
         vm.prank(PLAYER);
         raffle.enterRaffle{value: entranceFee}();
@@ -107,7 +106,6 @@ contract RaffleTest is Test, RaffleEvent {
     }
 
     function testCheckUpkeepReturnsFalseIfRaffleIsntOpen() public {
-        vm.skip(true); // something is incorrect here with performUpkeep
         // Arrange
         vm.prank(PLAYER);
         raffle.enterRaffle{value: entranceFee}();
@@ -126,7 +124,6 @@ contract RaffleTest is Test, RaffleEvent {
     // testCheckUpkeepReturnsTruenWhenParameterAreGood
 
     function testPerformUpkeepCanOnlyRunIfCheckUpkeepIsTrue() public {
-        vm.skip(true); // something is incorrect here with performUpkeep
         // Arrange
         vm.prank(PLAYER);
         raffle.enterRaffle{value: entranceFee}();
@@ -164,8 +161,6 @@ contract RaffleTest is Test, RaffleEvent {
     }
 
     function testPerformUpkeepUpdatesRaffleStateAndEmitsRequestId() public raffleEntered {
-        vm.skip(true); // something is incorrect here with performUpkeep
-
         // Act
         vm.recordLogs();
         raffle.performUpkeep("");

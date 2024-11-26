@@ -2,7 +2,8 @@
 pragma solidity 0.8.19;
 
 import {Script} from "forge-std/Script.sol";
-import {VRFCoordinatorV2Mock} from "@chainlink/vrf/mocks/VRFCoordinatorV2Mock.sol";
+// import {VRFCoordinatorV2Mock} from "@chainlink/vrf/mocks/VRFCoordinatorV2Mock.sol";
+import {VRFCoordinatorV2_5Mock} from "@chainlink/vrf/mocks/VRFCoordinatorV2_5Mock.sol";
 import {LinkToken} from "../test/mocks/LinkToken.sol";
 
 abstract contract CodeConstants {
@@ -68,7 +69,8 @@ contract HelperConfig is Script, CodeConstants {
         }
 
         vm.startBroadcast();
-        VRFCoordinatorV2Mock vrfCoordinatorMock = new VRFCoordinatorV2Mock(MOCK_BASE_FEE, MOCK_GAS_PRICE_LINK);
+        VRFCoordinatorV2_5Mock vrfCoordinatorMock =
+            new VRFCoordinatorV2_5Mock(MOCK_BASE_FEE, MOCK_GAS_PRICE_LINK, MOCK_WEI_PER_UNIT_LINK);
         LinkToken linkToken = new LinkToken();
         vm.stopBroadcast();
 
@@ -76,7 +78,7 @@ contract HelperConfig is Script, CodeConstants {
             entranceFee: 0.01 ether,
             interval: 30,
             vrfCoordinator: address(vrfCoordinatorMock),
-            gasLane: bytes32(abi.encodePacked(vrfCoordinatorMock.GAS_PRICE_LINK)),
+            gasLane: bytes32(abi.encodePacked(MOCK_GAS_PRICE_LINK)),
             callbackGasLimit: 500000,
             subscriptionId: 0,
             link: address(linkToken)
