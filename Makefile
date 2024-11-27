@@ -16,6 +16,9 @@ clean: ## Remove the build artifacts and cache directories.
 tests: ## Run the project’s tests.
 	forge test
 
+forked-tests: ## Run the project’s tests with a forked Sepolia network.
+	forge test --fork-url $(SEPOLIA_RPC_URL)
+
 coverage: ## Displays which parts of your code are covered by tests. 
 	forge coverage
 

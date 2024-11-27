@@ -28,6 +28,7 @@ contract HelperConfig is Script, CodeConstants {
         uint32 callbackGasLimit;
         uint256 subscriptionId;
         address link;
+        address account;
     }
 
     NetworkConfig public localNetworkConfig;
@@ -51,7 +52,7 @@ contract HelperConfig is Script, CodeConstants {
         return getConfigByChainId(block.chainid);
     }
 
-    function getSepoliaConfig() public pure returns (NetworkConfig memory) {
+    function getSepoliaConfig() public view returns (NetworkConfig memory) {
         return NetworkConfig({
             entranceFee: 0.01 ether,
             interval: 30,
@@ -59,7 +60,8 @@ contract HelperConfig is Script, CodeConstants {
             gasLane: 0x787d74caea10b2b357790d5b5247c2f63d1d91572a9846f780606e4d953677ae,
             callbackGasLimit: 500000,
             subscriptionId: 0,
-            link: address(0)
+            link: address(0),
+            account: vm.envAddress("MY_ADDRESS")
         });
     }
 
@@ -81,7 +83,8 @@ contract HelperConfig is Script, CodeConstants {
             gasLane: bytes32(abi.encodePacked(MOCK_GAS_PRICE_LINK)),
             callbackGasLimit: 500000,
             subscriptionId: 0,
-            link: address(linkToken)
+            link: address(linkToken),
+            account: 0x1804c8AB1F12E6bbf3894d4083f33e07309d1f38
         });
 
         return localNetworkConfig;
