@@ -61,7 +61,7 @@ contract HelperConfig is Script, CodeConstants {
             callbackGasLimit: 500000,
             subscriptionId: 0,
             link: address(0),
-            account: vm.envAddress("MY_ADDRESS")
+            account: vm.envOr("MY_ADDRESS", address(0))
         });
     }
 
